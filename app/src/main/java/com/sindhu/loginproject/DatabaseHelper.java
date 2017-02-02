@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 /**
- * Created by Sindhuja on February 01 2017.
+ * Created by Sindhu on February 01 2017.
  */
 
 public class DatabaseHelper extends SQLiteOpenHelper {
@@ -39,14 +39,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    //to add data into the database
     public int register(UserInfo userInfo) {
         SQLiteDatabase db = this.getWritableDatabase();
-
         int count;
         SQLiteDatabase dbTemp = this.getReadableDatabase();
-        Cursor dataTemp = dbTemp.rawQuery("SELECT * FROM " + tableName + " WHERE " + col_mail + "=?",new String[] {userInfo.getMailId()});
+        Cursor dataTemp = dbTemp.rawQuery("SELECT * FROM " + tableName + " WHERE " + col_mail + "=?", new String[]{userInfo.getMailId()});
         count = dataTemp.getCount();
-        if(count == 0) {
+        if (count == 0) {
             ContentValues contentValues = new ContentValues();
             contentValues.put(col_name, userInfo.getName());
             contentValues.put(col_mail, userInfo.getMailId());
@@ -66,32 +66,33 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String contact = userInfo.getPhone();
 
         //Null check
-        if(userInfo.getName().equals(""))
+        if (userInfo.getName().equals(""))
             return 1;
-        if(userInfo.getMailId().equals(""))
+        if (userInfo.getMailId().equals(""))
             return 2;
-        if(userInfo.getPassword().equals(""))
+        if (userInfo.getPassword().equals(""))
             return 3;
-        if(userInfo.getPhone().equals(""))
+        if (userInfo.getPhone().equals(""))
             return 4;
 
         //Name Checking
-        String lowerCase = "abcdefghijklmnopqrstuvwxyz";
+        String lowerCase = "abcdefghijklmnopqrstuvwxyz ";
         String upperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         String numbers = "0123456789";
         int alphabetsCount = 0, numbersCount = 0;
-
-
         for (int i = 0; i < name.length(); i++) {
             for (int j = 0; j < lowerCase.length(); j++)
-                if (name.charAt(i) == lowerCase.charAt(j) || name.charAt(i) == upperCase.charAt(j))
+                if (name.charAt(i) == lowerCase.charAt(j))
+                    alphabetsCount++;
+            for (int j = 0; j < upperCase.length(); j++)
+                if (name.charAt(i) == upperCase.charAt(j))
                     alphabetsCount++;
             for (int j = 0; j < numbers.length(); j++) {
                 if (name.charAt(i) == numbers.charAt(j))
                     numbersCount++;
             }
         }
-        if (!((alphabetsCount + numbersCount) == name.length() && alphabetsCount > 0 && numbersCount > 0))
+        if (!((alphabetsCount + numbersCount) == name.length() && alphabetsCount > 0 ))
             return 5;
         for (int j = 0; j < numbers.length(); j++) {
             if (name.charAt(0) == numbers.charAt(j)) {
@@ -100,92 +101,94 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
 
         //Email check
-        int at=-1,dot=0;
-        if(isCharacter(email.charAt(0))){
-            at=email.indexOf('@');
-            if(at!=-1){
-                dot=email.indexOf('.');
-                if(at<dot){
-                    for(int i=at+1;i<dot;i++){
-                        if(!isCharacter(email.charAt(i)))
+        int at = -1, dot = 0;
+        if (isCharacterAlphabet(email.charAt(0))) {
+            at = email.indexOf('@');
+            if (at != -1) {
+                dot = email.indexOf('.');
+                if (at < dot) {
+                    for (int i = at + 1; i < dot; i++) {
+                        if (!isCharacterAlphabet(email.charAt(i)))
                             return 6;
                     }
-                    for(int i=dot+1;i<email.length();i++){
-                        if(!isCharacter(email.charAt(i)))
+                    for (int i = dot + 1; i < email.length(); i++) {
+                        if (!isCharacterAlphabet(email.charAt(i)))
                             return 6;
                     }
                 }
             }
-        }
-        else
+        } else
             return 6;
-        for(int i=0;i<email.length();i++){
-            if(email.charAt(i)==' ')
+        for (int i = 0; i < email.length(); i++) {
+            if (email.charAt(i) == ' ')
                 return 6;
         }
 
         //Password Check
-        String specialCharacters = "!@#$%^&*()_-=+";
-        int lowerCount = 0,upperCount = 0, numberCount = 0, specialCount = 0;
-        for(int i=0;i<password.length();i++) {
-            for(int j=0;j<lowerCase.length();j++) {
-                if(password.charAt(i) == lowerCase.charAt(j)) {
+        String specialCharacters = "!@#$%^&*()_+-=~`\",./<>?;':[]{}\\| ";
+        int lowerCount = 0, upperCount = 0, numberCount = 0, specialCount = 0;
+        for (int i = 0; i < password.length(); i++) {
+            for (int j = 0; j < lowerCase.length(); j++) {
+                if (password.charAt(i) == lowerCase.charAt(j)) {
                     lowerCount++;
                     break;
                 }
             }
-            for(int j=0;j<upperCase.length();j++) {
-                if(password.charAt(i) == upperCase.charAt(j)) {
+            for (int j = 0; j < upperCase.length(); j++) {
+                if (password.charAt(i) == upperCase.charAt(j)) {
                     upperCount++;
                     break;
                 }
             }
-            for(int j=0;j<numbers.length();j++) {
-                if(password.charAt(i) == numbers.charAt(j)) {
+            for (int j = 0; j < numbers.length(); j++) {
+                if (password.charAt(i) == numbers.charAt(j)) {
                     numberCount++;
                     break;
                 }
             }
-            for(int j=0;j<specialCharacters.length();j++) {
-                if(password.charAt(i) == specialCharacters.charAt(j)) {
+            for (int j = 0; j < specialCharacters.length(); j++) {
+                if (password.charAt(i) == specialCharacters.charAt(j)) {
                     specialCount++;
                     break;
                 }
             }
         }
-        if(!((lowerCount>0) && (upperCount>0) && (numberCount>0) && (specialCount>0)))
+        if (!((lowerCount > 0) && (upperCount > 0) && (numberCount > 0) && (specialCount > 0) && (password.length() >= 6)))
             return 7;
 
         //Contact Number check
-        if(!(contact.length() == 10 ))
+        if (!(contact.length() == 10))
             return 8;
 
         return 0;
     }
 
-    public Boolean isCharacter(char ch) {
+    //To check whether the given character is an Alphabet
+    public Boolean isCharacterAlphabet(char ch) {
         String lowerCase = "abcdefghijklmnopqrstuvwxyz";
         String upperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        for(int i = 0;i<lowerCase.length();i++)
-            if(ch == lowerCase.charAt(i))
+        for (int i = 0; i < lowerCase.length(); i++)
+            if (ch == lowerCase.charAt(i))
                 return true;
-        for(int i = 0;i<upperCase.length();i++)
-            if(ch == upperCase.charAt(i))
+        for (int i = 0; i < upperCase.length(); i++)
+            if (ch == upperCase.charAt(i))
                 return true;
         return false;
     }
 
+    //Returns the user information
     public UserInfo getData(String email) {
         SQLiteDatabase db = this.getReadableDatabase();
         UserInfo userInfo = new UserInfo();
-        Cursor data = db.query(tableName,new String[] {col_id,col_name,col_mail,col_num,col_pass}, col_mail + "=?", new String[] {email}, null,null,null);
-        if (data != null)
-            data.moveToFirst();
-        userInfo.setName(data.getString(1));
-        userInfo.setMailId(data.getString(2));
-        userInfo.setPhone(data.getString(3));
-        userInfo.setPassword(data.getString(4));
-        return userInfo;
+        Cursor data = db.query(tableName, new String[]{col_id, col_name, col_mail, col_num, col_pass}, col_mail + "=?", new String[]{email}, null, null, null);
+        if (data.moveToFirst()) {
+            userInfo.setName(data.getString(1));
+            userInfo.setMailId(data.getString(2));
+            userInfo.setPhone(data.getString(3));
+            userInfo.setPassword(data.getString(4));
+            return userInfo;
+        } else {
+            return null;
+        }
     }
 }
-
