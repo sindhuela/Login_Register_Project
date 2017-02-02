@@ -1,4 +1,5 @@
 package com.sindhu.loginproject;
+
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -47,21 +48,25 @@ public class LoginActivity extends AppCompatActivity {
 
                 UserInfo userInfo = db.getData(mailId);
 
-                if(password.equals(userInfo.getPassword())) {
+                if(userInfo != null) {
+                    if (password.equals(userInfo.getPassword())) {
 
-                    //clearing existing text
-                    email.setText("");
-                    passWord.setText("");
+                        //clearing existing text
+                        email.setText("");
+                        passWord.setText("");
 
-                    //calling LoginWelcomeActivity
-                    Intent intent = new Intent(LoginActivity.this, LoginWelcomeActivity.class);
-                    intent.putExtra("email",mailId);                                                        // passing mail id to next activity
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);                                        // clearing activity from activity stack
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);                                     // removing transition effects
-                    Toast.makeText(LoginActivity.this,"Login Success!" ,Toast.LENGTH_LONG).show();          // displaying success message
-                    startActivity(intent);                                                                  // calling next activity
+                        //calling LoginWelcomeActivity
+                        Intent intent = new Intent(LoginActivity.this, LoginWelcomeActivity.class);
+                        intent.putExtra("email", mailId);                                                       // passing mail id to next activity
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);                                        // clearing activity from activity stack
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);                                     // removing transition effects
+                        Toast.makeText(LoginActivity.this, "Login Success!", Toast.LENGTH_LONG).show();         // displaying success message
+                        startActivity(intent);                                                                  // calling next activity
+                    } else {
+                        Toast.makeText(LoginActivity.this, "Login Failed!", Toast.LENGTH_LONG).show();          // displaying error message
+                    }
                 } else {
-                    Toast.makeText(LoginActivity.this,"Login Failed!" ,Toast.LENGTH_LONG).show();           // displaying error message
+                    Toast.makeText(LoginActivity.this, "Email not registered!", Toast.LENGTH_LONG).show();      // displaying error message
                 }
 
             }
