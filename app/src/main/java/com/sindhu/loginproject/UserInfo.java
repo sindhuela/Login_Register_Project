@@ -1,7 +1,7 @@
 package com.sindhu.loginproject;
 
 /**
- * Created by Sindhuja on February 01 2017.
+ * Created by Sindhu on February 01 2017.
  */
 
 public class UserInfo {
