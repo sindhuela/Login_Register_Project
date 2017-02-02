@@ -103,7 +103,6 @@ public class RegisterActivity extends AppCompatActivity {
                         Toast.makeText(RegisterActivity.this, "Invalid Contact Number!", Toast.LENGTH_LONG).show();
                         break;
                 }
-
             }
         });
     }
